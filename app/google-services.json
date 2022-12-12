@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "418671984776",
+    "project_id": "matenote-f7aa7",
+    "storage_bucket": "matenote-f7aa7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418671984776:android:5f7f4b2098babd61529f3d",
+        "android_client_info": {
+          "package_name": "com.rizend.matenote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "418671984776-q2qvc351obmsvnchbqamn5cnjs32bj71.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rizend.matenote",
+            "certificate_hash": "9c62870059c77032664382c127fc0ada29c2f14a"
+          }
+        },
+        {
+          "client_id": "418671984776-muao0i0d0h09qjdhho11o8jt3t6u0irn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYvH-cYzaBfI4k6zs-s3d5MCC1xLr_zfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "418671984776-muao0i0d0h09qjdhho11o8jt3t6u0irn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
