@@ -30,15 +30,17 @@ import java.util.Map;
 public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.ViewHolder> {
     private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
     private Context mContext;
+    private String idUser;
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
      *
      * @param options
      */
-    public NoteAdapter(FirestoreRecyclerOptions<Note> options, Context context) {
+    public NoteAdapter(FirestoreRecyclerOptions<Note> options, String idUser, Context context) {
         super(options);
         this.mContext = context;
+        this.idUser = idUser;
     }
 
     @Override
@@ -51,7 +53,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.View
             deleteNote(id);
         });
         holder.editNote.setOnClickListener(view -> {
-            updateNote(id);
+            updateNote(id, note.getTitleNote(), note.getDataNote());
         });
     }
 /*
@@ -70,12 +72,14 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.View
         });
     }
 */
-    private void updateNote(String id) {
+    private void updateNote(String id, String title, String data) {
         UIUtils uiUtils = new UIUtils(mContext);
         Dialog dialog = uiUtils.dialogEditNote();
         Button btnOk = dialog.findViewById(R.id.btn_dialog_ok);
         EditText etTitle = dialog.findViewById(R.id.et_title_note);
         EditText etNote = dialog.findViewById(R.id.et_note);
+        etTitle.setText(title);
+        etNote.setText(data);
         btnOk.setOnClickListener(view -> {
             if(!etTitle.getText().toString().isEmpty() && !etNote.getText().toString().isEmpty()){
                 Map<String, Object> map = new HashMap<>();

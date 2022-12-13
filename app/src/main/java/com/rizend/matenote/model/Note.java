@@ -1,17 +1,17 @@
 package com.rizend.matenote.model;
 
-import com.google.firebase.firestore.PropertyName;
-
 public class Note {
     private String titleNote;
     private String dataNote;
+    private String userNote;
 
     public Note() {
     }
 
-    public Note(String titleNote, String dataNote) {
+    public Note(String titleNote, String dataNote, String userNote) {
         this.titleNote = titleNote;
         this.dataNote = dataNote;
+        this.userNote = userNote;
     }
 
     public String getTitleNote() {
@@ -28,5 +28,13 @@ public class Note {
 
     public void setDataNote(String dataNote) {
         this.dataNote = dataNote;
+    }
+
+    public String getUserNote() {
+        return userNote;
+    }
+
+    public void setUserNote(String userNote) {
+        this.userNote = userNote;
     }
 }

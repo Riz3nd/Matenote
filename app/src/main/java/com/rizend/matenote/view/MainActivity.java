@@ -1,9 +1,12 @@
 package com.rizend.matenote.view;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,7 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.rizend.matenote.R;
@@ -31,19 +36,22 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private RecyclerView mRecycler;
     private NoteAdapter mAdapter;
-    public Boolean status = false;
-
+    private FirebaseAuth mAuth;
+    private UIUtils uiUtils;
+    private String idUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         mFirestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        idUser = getIntent().getStringExtra("idUser");
         initView();
     }
 
     public void initView(){
-        UIUtils uiUtils = new UIUtils(this);
+        uiUtils = new UIUtils(this);
         loadRecycler();
         binding.btnAddNote.setOnClickListener(view -> {
             Dialog dialogNote = uiUtils.dialogCreateNote();
@@ -54,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
                 addNote(dialogNote, etTitle.getText().toString(), etNote.getText().toString());
             });
         });
+        binding.btnUser.setOnClickListener(view -> {
+            dataUser();
+        });
     }
 
     private void loadRecycler(){
@@ -61,14 +72,38 @@ public class MainActivity extends AppCompatActivity {
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         Query query = mFirestore.collection("note");
         FirestoreRecyclerOptions<Note> fireAdapter = new FirestoreRecyclerOptions.Builder<Note>().setQuery(query, Note.class).build();
-        mAdapter = new NoteAdapter(fireAdapter, this);
+        mAdapter = new NoteAdapter(fireAdapter, idUser, this);
         mAdapter.notifyDataSetChanged();
         mRecycler.setAdapter(mAdapter);
+    }
+
+    private void dataUser(){
+        Dialog userDialog = uiUtils.dialogUser();
+        Button btnSignOut = userDialog.findViewById(R.id.btnSingOut);
+        TextView tvUser = userDialog.findViewById(R.id.tvUser);
+        TextView tvEmail = userDialog.findViewById(R.id.tvEmail);
+        System.out.println("USUARIO ID MAIN: "+getIntent().getStringExtra("idUser"));
+        if(idUser != null){
+            mFirestore.collection("user").document(idUser).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    tvUser.setText("Usuario: "+documentSnapshot.get("userName"));
+                    tvEmail.setText("Email: "+mAuth.getCurrentUser().getEmail());
+                }
+            });
+        }
+        btnSignOut.setOnClickListener(view -> {
+            mAuth.signOut();
+            userDialog.dismiss();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
     }
 
     private void addNote(Dialog dialog, String titleNote, String dataNote){
         if(!titleNote.isEmpty() && !dataNote.isEmpty()){
             Map<String, Object> map = new HashMap<>();
+            map.put("userNote", idUser);
             map.put("titleNote", titleNote);
             map.put("dataNote", dataNote);
             mFirestore.collection("note").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

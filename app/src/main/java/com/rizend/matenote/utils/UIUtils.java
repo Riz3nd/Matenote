@@ -34,4 +34,14 @@ public class UIUtils {
         return mDialog;
     }
 
+
+    public Dialog dialogUser(){
+        Dialog mDialog = new Dialog(mContext);
+        mDialog.setContentView(R.layout.dialog_user);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mDialog.create();
+        mDialog.show();
+        return mDialog;
+    }
+
 }
