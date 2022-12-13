@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
-            android:hint="Contraseña Login"
+            android:hint="Contraseña"
             android:inputType="textPassword"
             android:textAlignment="center" />
         <LinearLayout

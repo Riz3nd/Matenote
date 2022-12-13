@@ -8,6 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="orage">#F44336</color>
+    <color name="orage_medium">#F85347</color>
+    <color name="orage_dark">#C93E34</color>
+    
     <color name="yellow_middle">#ffee58</color>
     <color name="yellow_end">#7ae7de83</color>
 
