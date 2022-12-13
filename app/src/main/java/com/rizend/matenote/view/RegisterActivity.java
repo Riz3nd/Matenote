@@ -55,26 +55,27 @@ public class RegisterActivity extends AppCompatActivity {
             mAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    String id = mAuth.getCurrentUser().getUid();
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("id",id);
-                    map.put("userName",userName);
-                    map.put("userEmail",userEmail);
-                    map.put("userPass",userPass);
-                    mFirestore.collection("user").document(id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            startActivity(new Intent(mContext, LoginActivity.class));
-                            finish();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(),"Error al registrar!",Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    if(task.isComplete())
-                        Toast.makeText(getApplicationContext(),"Registrado!",Toast.LENGTH_LONG).show();
+                    if(task.isSuccessful()) {
+                        String id = mAuth.getCurrentUser().getUid();
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("id", id);
+                        map.put("userName", userName);
+                        map.put("userEmail", userEmail);
+                        map.put("userPass", userPass);
+                        mFirestore.collection("user").document(id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getApplicationContext(), "Error al registrar!", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        Toast.makeText(getApplicationContext(), "Registrado!", Toast.LENGTH_LONG).show();
+                    }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
