@@ -30,17 +30,15 @@ import java.util.Map;
 public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.ViewHolder> {
     private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
     private Context mContext;
-    private String idUser;
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
      *
      * @param options
      */
-    public NoteAdapter(FirestoreRecyclerOptions<Note> options, String idUser, Context context) {
+    public NoteAdapter(FirestoreRecyclerOptions<Note> options, Context context) {
         super(options);
         this.mContext = context;
-        this.idUser = idUser;
     }
 
     @Override
@@ -72,6 +70,15 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.View
         });
     }
 */
+
+    @Override
+    public int getItemCount() {
+        if (super.getItemCount() != 0)
+            return super.getItemCount();
+        else
+            return 0;
+    }
+
     private void updateNote(String id, String title, String data) {
         UIUtils uiUtils = new UIUtils(mContext);
         Dialog dialog = uiUtils.dialogEditNote();

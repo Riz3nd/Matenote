@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,10 +22,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.rizend.matenote.R;
+import com.rizend.matenote.adapter.NoteAdapter;
 import com.rizend.matenote.databinding.ActivityMainBinding;
 import com.rizend.matenote.model.Note;
 import com.rizend.matenote.utils.UIUtils;
-import com.rizend.matenote.adapter.NoteAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,26 +52,31 @@ public class MainActivity extends AppCompatActivity {
     public void initView(){
         uiUtils = new UIUtils(this);
         loadRecycler();
-        binding.btnAddNote.setOnClickListener(view -> {
-            Dialog dialogNote = uiUtils.dialogCreateNote();
-            Button btnOK = dialogNote.findViewById(R.id.btn_dialog_ok);
-            EditText etTitle = dialogNote.findViewById(R.id.et_title_note);
-            EditText etNote = dialogNote.findViewById(R.id.et_note);
-            btnOK.setOnClickListener(view1 -> {
-                addNote(dialogNote, etTitle.getText().toString(), etNote.getText().toString());
-            });
-        });
-        binding.btnUser.setOnClickListener(view -> {
-            dataUser();
+        binding.btnNavMenu.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.menu_user:
+                    dataUser();
+                    break;
+                case R.id.menu_add_note:
+                    Dialog dialogNote = uiUtils.dialogCreateNote();
+                    Button btnOK = dialogNote.findViewById(R.id.btn_dialog_ok);
+                    EditText etTitle = dialogNote.findViewById(R.id.et_title_note);
+                    EditText etNote = dialogNote.findViewById(R.id.et_note);
+                    btnOK.setOnClickListener(view1 -> {
+                        addNote(dialogNote, etTitle.getText().toString(), etNote.getText().toString());
+                    });
+                    break;
+            }
+            return false;
         });
     }
 
     private void loadRecycler(){
         mRecycler = findViewById(R.id.recyclerNotes);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
-        Query query = mFirestore.collection("note");
+        Query query = mFirestore.collection("note").whereEqualTo("userNote", idUser);
         FirestoreRecyclerOptions<Note> fireAdapter = new FirestoreRecyclerOptions.Builder<Note>().setQuery(query, Note.class).build();
-        mAdapter = new NoteAdapter(fireAdapter, idUser, this);
+        mAdapter = new NoteAdapter(fireAdapter, this);
         mAdapter.notifyDataSetChanged();
         mRecycler.setAdapter(mAdapter);
     }

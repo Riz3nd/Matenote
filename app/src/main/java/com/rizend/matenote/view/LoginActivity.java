@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(mContext,"Usuario no existe!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext,"Datos incorrectos!",Toast.LENGTH_LONG).show();
                 }
             });
         }else{
