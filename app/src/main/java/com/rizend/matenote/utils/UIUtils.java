@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rizend.matenote.R;
 
@@ -42,6 +43,10 @@ public class UIUtils {
         mDialog.create();
         mDialog.show();
         return mDialog;
+    }
+
+    public void myToast(String text){
+        Toast.makeText(mContext, text, Toast.LENGTH_LONG).show();
     }
 
 }

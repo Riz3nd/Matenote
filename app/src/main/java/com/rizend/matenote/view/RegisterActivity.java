@@ -16,6 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.rizend.matenote.databinding.ActivityRegisterBinding;
+import com.rizend.matenote.utils.UIUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private Context mContext;
+    private UIUtils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,20 +40,21 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        utils = new UIUtils(mContext);
         binding.btnSetLogin.setOnClickListener(view -> {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
         binding.btnSignUp.setOnClickListener(view -> {
-            initAuth();
+            registerUser();
         });
     }
 
-    private void initAuth(){
+    private void registerUser(){
         String userName = binding.etUserName.getText().toString();
         String userEmail = binding.etEmail.getText().toString();
         String userPass = binding.etPassword.getText().toString();
-        if(!userEmail.isEmpty() && !userPass.isEmpty()){
+        if((!userEmail.isEmpty() && !userPass.isEmpty()) && (userPass.length() > 6)){
             mAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -71,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "Error al registrar!", Toast.LENGTH_LONG).show();
+                                utils.myToast("Error al registrar!");
                             }
                         });
                         Toast.makeText(getApplicationContext(), "Registrado!", Toast.LENGTH_LONG).show();
@@ -80,11 +83,12 @@ public class RegisterActivity extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(),"Fallo el registro, intente nuevamente!",Toast.LENGTH_LONG).show();
+                    utils.myToast("Fallo el registro, intente nuevamente!");
                 }
             });
         }else{
-            Toast.makeText(this,"Datos incompletos!",Toast.LENGTH_LONG).show();
+            utils.myToast("Datos incorrectos!");
+            //utils.myToast();
         }
     }
 
